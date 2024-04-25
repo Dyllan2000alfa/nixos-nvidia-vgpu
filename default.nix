@@ -9,10 +9,10 @@ let
 
   cfg = config.hardware.nvidia.vgpu;
 
-  mdevctl = pkgs.callPackage ./mdevctl {};
+  mdevctl = pkgs.mdevctl;
   frida = fridaFlake.packages.${pkgs.system}.frida-tools;
 
-  myVgpuVersion = "525.105.14";
+  myVgpuVersion = "535.129.03";
   
   # maybe take a look at https://discourse.nixos.org/t/how-to-add-custom-python-package/536/4
   vgpu_unlock = pkgs.python310Packages.buildPythonPackage {
@@ -89,14 +89,12 @@ in
       { patches ? [], postUnpack ? "", postPatch ? "", preFixup ? "", ... }@attrs: {
       # Overriding https://github.com/NixOS/nixpkgs/tree/nixos-unstable/pkgs/os-specific/linux/nvidia-x11
       # that gets called from the option hardware.nvidia.package from here: https://github.com/NixOS/nixpkgs/blob/nixos-22.11/nixos/modules/hardware/video/nvidia.nix
-      name = "NVIDIA-Linux-x86_64-525.105.17-merged-vgpu-kvm-patched-${config.boot.kernelPackages.kernel.version}";
+      name = "NVIDIA-Linux-x86_64-535.129.03-merged-vgpu-kvm-patched-${config.boot.kernelPackages.kernel.version}";
       version = "${myVgpuVersion}";
 
-      # the new driver (getting from my Google drive)
       src = pkgs.fetchurl {
-              name = "NVIDIA-Linux-x86_64-525.105.17-merged-vgpu-kvm-patched.run"; # So there can be special characters in the link below: https://github.com/NixOS/nixpkgs/issues/6165#issuecomment-141536009
-              url = "https://drive.google.com/u/1/uc?id=17NN0zZcoj-uY2BELxY2YqGvf6KtZNXhG&export=download&confirm=t&uuid=e2729c36-3bb7-4be6-95b0-08e06eac55ce&at=AKKF8vzPeXmt0W_pxHE9rMqewfXY:1683158182055";
-              sha256 = "sha256-g8BM1g/tYv3G9vTKs581tfSpjB6ynX2+FaIOyFcDfdI=";
+              url = "https://files.tinoco.casa/NVIDIA-Linux-x86_64-535.129.03-merged-vgpu-kvm-patched.run";
+              sha256 = "e6dca5626a2608c6bb2a046cfcb7c1af338b9e961a7dd90ac09bb8a126ff002e";
             };
 
       postPatch = if postPatch != null then postPatch + ''
